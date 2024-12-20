@@ -1,0 +1,98 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
+header {
+  background-color: #007BFF;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+form {
+  max-width: 400px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #007BFF;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#results {
+  max-width: 400px;
+  margin: 20px auto;
+  background: #e9ecef;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+#results {
+  max-width: 400px;
+  margin: 20px auto;
+  background: #fdfdfd; /* Couleur de fond claire */
+  padding: 20px;
+  border: 2px solid #007BFF; /* Bordure bleue */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre pour un effet en relief */
+  text-align: center;
+}
+
+#results h2 {
+  font-size: 1.5em;
+  color: #007BFF; /* Couleur bleue pour le titre */
+  margin-bottom: 15px;
+}
+
+#results p {
+  font-size: 1.2em; /* Texte plus grand pour une meilleure lisibilité */
+  margin: 10px 0;
+  color: #333; /* Couleur de texte sombre */
+}
+
+#results p span {
+  font-weight: bold; /* Mise en gras des valeurs importantes */
+  color: #007BFF;
+}
+.logo-container {
+  display: flex;
+  justify-content: center; /* Centrer le logo horizontalement */
+  align-items: center; /* Centrer le logo verticalement */
+  margin: 0px 0;
+}
+
+.logo {
+  width: 250px; /* Largeur du logo */
+  height: auto; /* Ajuste automatiquement la hauteur */
+  border-radius: 0px; /* Ajoute des bords arrondis (facultatif) */
+  box-shadow: 0 12px 0px rgba(0, 0, 0, 0.1); /* Ajoute une ombre au logo */
+}

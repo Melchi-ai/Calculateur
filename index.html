@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculateur de Carrelage</title>
+  <link rel="stylesheet" href="Carreaux.css">
+</head>
+<body>
+  <header>
+    <h1>OWO-LEGBON</h1>
+    <h3>Calculateur de Carrelage</h3>
+  </header>
+  <main>
+    <form id="tileForm">
+      <label for="tileType">Type de carreaux :</label>
+      <select id="tileType" required>
+        <option value="40x40">40x40</option>
+        <option value="25x40">25x40 (Faïences)</option>
+        <option value="60x60">60x60</option>
+      </select>
+
+      <label for="userType">Type d'utilisateur :</label>
+      <select id="userType" required>
+        <option value="menage">Ménage</option>
+        <option value="revendeur">Revendeur</option>
+      </select>
+
+      <label for="area">Surface en m² demandée :</label>
+      <input type="number" id="area" step="0.01" placeholder="Ex : 20">
+
+      <label for="cartons">Nombre de cartons :</label>
+      <input type="number" id="cartons" step="1" placeholder="Ex : 10">
+
+      <label for="pieces">Nombre de pièces :</label>
+      <input type="number" id="pieces" step="1" placeholder="Ex : 5">
+      <label for="pricePerSquareMeter">Prix du m² (en FCFA) :</label>
+<input type="number" id="pricePerSquareMeter" step="0.01" placeholder="Ex : 3000" required>
+
+<label for="totalPrice">Montant total (en FCFA) :</label>
+<input type="number" id="totalPrice" step="0.01" placeholder="Ex : 500000">
+
+      <button type="button" onclick="calculate()">Calculer</button>
+    </form>
+
+    <section id="results" style="display:none;">
+      <h2>Résultats</h2>
+      <div>
+        <h3>Cartons nécessaires :</h3>
+        <p id="neededCartons" style="color:red;"></p>
+      </div>
+      <div>
+        <h3>Pièces nécessaires :</h3>
+        <p id="neededPieces" style="color:blue;"></p>
+      </div>
+      <div>
+        <h3>Surface totale calculée :</h3>
+        <p id="calculatedArea" style="color:green;"></p>
+      </div>
+    </section>
+   <script>
+  function calculate() {
+    const tileType = document.getElementById("tileType").value;
+    const userType = document.getElementById("userType").value;
+    const area = parseFloat(document.getElementById("area").value);
+    const cartons = parseInt(document.getElementById("cartons").value) || 0;
+    const pieces = parseInt(document.getElementById("pieces").value) || 0;
+
+    const pricePerSquareMeter = parseFloat(document.getElementById("pricePerSquareMeter").value) || 0;
+    const totalPrice = parseFloat(document.getElementById("totalPrice").value) || 0;
+
+    // Données des carreaux
+    const tileData = {
+      "40x40": { piecesPerBox: 12, areaPerBox: userType === "revendeur" ? 1.92 : 2 },
+      "25x40": { piecesPerBox: 15, areaPerBox: 1.5 },
+      "60x60": { piecesPerBox: 4, areaPerBox: userType === "revendeur" ? 1.44 : 1.5 },
+    };
+
+    const selectedTile = tileData[tileType];
+
+    // Vérification des données
+    if (!selectedTile) {
+      alert("Veuillez sélectionner un type de carreaux valide.");
+      return;
+    }
+
+    // Calcul de la surface totale à partir du prix total
+    let totalAreaFromPrice = 0;
+    if (totalPrice > 0 && pricePerSquareMeter > 0) {
+      totalAreaFromPrice = totalPrice / pricePerSquareMeter; // Surface en m² calculée
+    }
+
+    // Calcul des cartons et pièces nécessaires pour la surface calculée
+    let neededCartons = 0;
+    let neededPieces = 0;
+    let calculatedArea = 0;
+
+    if (totalAreaFromPrice > 0) {
+      const piecesPerBox = selectedTile.piecesPerBox;
+      const areaPerPiece = selectedTile.areaPerBox / piecesPerBox;
+
+      let totalPiecesNeeded = Math.floor(totalAreaFromPrice / areaPerPiece);
+      neededCartons = Math.floor(totalPiecesNeeded / piecesPerBox);
+      neededPieces = totalPiecesNeeded % piecesPerBox;
+
+      // Ajustement pour ne pas dépasser la surface demandée
+      calculatedArea = neededCartons * selectedTile.areaPerBox + neededPieces * areaPerPiece;
+    }
+
+    // Calcul de la surface totale et du nombre de cartons/pièces pour la surface demandée (si elle est renseignée)
+    if (area > 0) {
+      const piecesPerBox = selectedTile.piecesPerBox;
+      const areaPerPiece = selectedTile.areaPerBox / piecesPerBox;
+
+      let totalPiecesNeeded = Math.floor(area / areaPerPiece);
+      neededCartons = Math.floor(totalPiecesNeeded / piecesPerBox);
+      neededPieces = totalPiecesNeeded % piecesPerBox;
+
+      // Ajustement pour ne pas dépasser la surface demandée
+      calculatedArea =
+        neededCartons * selectedTile.areaPerBox + neededPieces * areaPerPiece;
+    }
+
+    // Calcul de la surface à partir des cartons et pièces
+    let totalAreaFromCartonsAndPieces = 0;
+    if (cartons > 0) {
+      totalAreaFromCartonsAndPieces = cartons * selectedTile.areaPerBox;
+    }
+
+    if (pieces > 0) {
+      totalAreaFromCartonsAndPieces += pieces * (selectedTile.areaPerBox / selectedTile.piecesPerBox);
+    }
+
+    // Affichage des résultats
+    document.getElementById("neededCartons").innerText = `Cartons nécessaires : ${neededCartons}`;
+    document.getElementById("neededPieces").innerText = `Pièces nécessaires : ${neededPieces}`;
+    document.getElementById("calculatedArea").innerText = `Surface totale calculée : ${calculatedArea.toFixed(2)} m²`;
+
+    // Affichage des résultats basés sur le prix total
+    if (totalAreaFromPrice > 0) {
+      document.getElementById("neededCartons").innerText += ` (d'après le prix total)`;
+      document.getElementById("neededPieces").innerText += ` (d'après le prix total)`;
+      document.getElementById("calculatedArea").innerText = `Surface totale calculée (d'après le prix total) : ${totalAreaFromPrice.toFixed(2)} m²`;
+    }
+
+    // Affichage de la surface à partir des cartons et pièces
+    if (cartons > 0 || pieces > 0) {
+      document.getElementById("calculatedArea").innerText = `Surface totale basée sur les cartons et pièces : ${totalAreaFromCartonsAndPieces.toFixed(2)} m²`;
+    }
+
+    document.getElementById("results").style.display = "block";
+  }
+</script>
